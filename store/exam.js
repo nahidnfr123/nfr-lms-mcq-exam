@@ -58,8 +58,10 @@ export default {
         result_publish_time: null
       }
     },
-    setContent(state, payload){
+    setContent(state, payload) {
       state.content = payload || null
+      state.exam = payload?.exam || null
+      this.commit('exam/setResult', payload?.exam?.result, {root: true})
     },
     setExam(state, payload) {
       state.content = payload || null
@@ -92,7 +94,7 @@ export default {
         end_time: endTime,
       }
 
-      state.isResultAvailable = state.exam.mode === 'practice' ? false : moment().isSameOrAfter(state.examConfig.result_publish_time, 'seconds')
+      state.isResultAvailable = state.exam.mode === 'practice' ? false : moment().isSameOrAfter(state.exam.result_publish_time, 'seconds')
     },
     setQuestions(state, payload) {
       state.exam = payload || {}
@@ -102,6 +104,8 @@ export default {
       state.result = state.exam.mode === 'practice' ? false : payload || null
       state.attended = state.exam.mode === 'practice' ? false : !!(state.result && state.result?.submitted)
       state.submitted = state.exam.mode === 'practice' ? false : state.result?.submitted
+
+      state.isResultAvailable = state.exam.mode === 'practice' ? false : moment().isSameOrAfter(state.exam.result_publish_time, 'seconds')
     },
     mcqClicked(state, payload) {
       const index = state.examQuestions.findIndex((x) => x.id === payload.id)
@@ -116,33 +120,43 @@ export default {
       const {id} = context.state.exam
 
       if (id) {
-        await this.$axios.$get('/exams/' + id).then((response) => {
+        const url = context.rootState.examUrls.backendUrls.getExam
+        await this.$axios.$get(url + id).then((response) => {
           if (response) context.commit('setQuestions', response.data)
           if (!response.data.result && !context.state.timeOver) context.dispatch('examStarted')
         })
       }
     },
     async examStarted(context) {
-      const url = 'results'
-      const data = {exam_id: context.state.exam?.id, submitted: 0}
+      let result = context.state.result
+      if (!result.submitted) {
+        const url = context.rootState.examUrls.backendUrls.submitExam
+        const data = {exam_id: context.state.exam?.id, submitted: 0}
 
-      await this.$axios.$post(url, data).then((response) => {
-        if (response) context.commit('setResult', response.data)
-      })
+        await this.$axios.$post(url, data).then((response) => {
+          if (response) context.commit('setResult', response.data)
+        })
+      }
     },
     async submitExam(context) {
-      const url = 'results'
-      const answers = context.state.examQuestions.filter((mcq) => mcq.user_answer).map((mcq) => {
-        return {
-          user_answer: mcq.user_answer || null,
-          mcq_id: mcq.id
-        }
-      })
-      const data = {exam_id: context.state.exam.id, submitted: 1, answers}
+      let result = context.state.result
+      if (!result.submitted) {
+        const url = context.rootState.examUrls.backendUrls.submitExam
+        const answers = context.state.examQuestions.filter((mcq) => mcq.user_answer).map((mcq) => {
+          return {
+            user_answer: mcq.user_answer || null,
+            mcq_id: mcq.id
+          }
+        })
+        const data = {exam_id: context.state.exam.id, submitted: 1, answers}
 
-      await this.$axios.$post(url, data).then((response) => {
-        if (response) context.commit('setResult', response.data)
-      })
+        await this.$axios.$post(url, data).then((response) => {
+          if (response) context.commit('setResult', response.data)
+        })
+      }
+    },
+    getSetResult() {
+
     }
   }
 }

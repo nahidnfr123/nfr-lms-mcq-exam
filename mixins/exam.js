@@ -43,13 +43,13 @@ export default {
     }
   },
   methods: {
-    submit() {
+    submit({context}) {
       let exam_id = this.exam.id
 
       if (this.examConfig.mode === 'practice') return
       if (this.examConfig.mode === 'group') exam_id = this.examConfig.exam_id
 
-      const url = 'results'
+      const url = context.store.state.examUrls.backendUrls.submitExam
       const answers = this.mcqs.filter((mcq) => mcq.user_answer).map((mcq) => {
         return {user_answer: mcq.user_answer || null, mcq_id: mcq.id}
       })

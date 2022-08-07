@@ -2,11 +2,12 @@ export default {
   namespaced: true,
   state() {
     return {
-      frontEndUrls: {
+      frontendUrls: {
         exam: null,
-        result: null
+        ranking: null
       },
       backendUrls: {
+        getContent: null,
         getExam: null,
         submitExam: null,
         getRanking: null,
@@ -14,6 +15,13 @@ export default {
     }
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    setFrontendUrls(state, payload) {
+      state.frontendUrls = payload
+    },
+    setBackendUrls(state, payload) {
+      state.backendUrls = payload
+    }
+  },
   actions: {}
 }

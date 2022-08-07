@@ -208,7 +208,7 @@ export default {
   methods: {
     async init() {
       // this.$store.commit('exam/clearExam')
-      await this.$axios.get('contents/' + this.contentId)
+      await this.$axios.get(this.$store.state.examUrls.backendUrls.getContent)
         .then((response) => {
           if (response.data.data && Object.keys(response.data.data).length) {
             this.$store.dispatch('exam/initExam', response.data.data)
