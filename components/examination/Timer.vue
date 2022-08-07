@@ -33,7 +33,7 @@
             </v-progress-circular>
           </div>
           <h3 v-else>
-            <div class="d-flex justify-space-between align-center">
+            <div class="d-flex justify-space-between align-center pa-1 gpa-10">
               <div>
                 <slot name="examInfo"></slot>
               </div>

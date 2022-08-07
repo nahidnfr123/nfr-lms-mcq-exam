@@ -2,12 +2,14 @@ export default {
   namespaced: true,
   state() {
     return {
-      frontEndUrl:{
-
+      frontEndUrls: {
+        exam: null,
+        result: null
       },
-      backendUrl:{
+      backendUrls: {
         getExam: null,
-        getResult: null,
+        submitExam: null,
+        getRanking: null,
       }
     }
   },

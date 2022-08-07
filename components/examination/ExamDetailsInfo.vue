@@ -16,7 +16,7 @@
       </tr>
       <tr v-if="content[type].duration">
         <td>Exam Duration</td>
-        <td>{{ content[type].duration }}</td>
+        <td>{{ content[type].duration }} min</td>
       </tr>
       <tr v-if="content[type].per_question_mark">
         <td>Per Question Mark</td>

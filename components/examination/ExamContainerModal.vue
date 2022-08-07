@@ -34,24 +34,9 @@ export default {
     content: {type: Object, required: true},
     rankingUrl: {type: String, required: true}
   },
-  async fetch() {
-    // this.initExamConfig()
-    // // await this.showExamQuestions() /// Comment this line In live site
-  },
   data() {
     return {
       dialog: false,
-      loader: {isLoading: false},
-      examQuestions: [],
-      examStarted: false,
-      showCountDownTimer: false,
-      barColor: '#02ed7f',
-      submitAnswers: false,
-      result: {},
-      selectedMcqs: [],
-      userAnswers: [],
-      showReminder: false,
-      selectedSubjects: []
     }
   },
   watch: {
@@ -61,52 +46,10 @@ export default {
     dialog(val) {
       this.$emit('close', val)
     },
-    selectedSubjects(newVal) {
-      let totalMcq = 0
-
-      if (newVal && newVal.length) {
-        newVal.forEach((obj) => totalMcq = totalMcq + obj.mcqs.length)
-      }
-      this.examConfig.totalQuestions = totalMcq
-    }
-  },
-  mounted() {
-    if (this.content.exam)
-      if (this.content.exam.subjects && this.content.exam.subjects.length) {
-        this.selectedSubjects = this.content.exam.subjects.filter((obj) => obj.required)
-      }
   },
   methods: {
-    /*async init() {
-      this.loader.isLoading = true
-      this.examQuestions = []
-      if (this.examConfig.mode !== 'group') {
-        const id = this.content?.exam?.id
-
-        if (id) {
-          const response = await this.$getData('/exams/' + id)
-
-          this.examQuestions = response.message === 'success' ? response.data : []
-          this.examConfig.totalQuestions = this.examQuestions.mcqs ? this.examQuestions.mcqs.length : 0
-        } else {
-          this.examQuestions = this.selectedSubjects
-        }
-      }
-      this.loader.isLoading = false
-    },*/
-    /*async showExamQuestions(showCountDownTimer = true) {
-      this.showCountDownTimer = showCountDownTimer
-      await this.init()
-      this.examStarted = true
-      // if (!this.result || (this.result && !this.result?.submitted)) await this.initTimer()
-      if (!this.result && (this.examQuestions && Object.keys(this.examQuestions).length && this.examConfig.totalQuestions > 0)) {
-        await this.storeStartTime()
-      }
-      // Need To Work Here ......
-      else if (this.examConfig.mode === 'group') await this.storeStartTime()
-    },*/
     async closeExamModal() {
-      const {result} = this.$store.state.exam.exam
+      const {result} = this.$store.state.exam
 
       if (result && !result.submitted)
         this.$swal?.fire({
@@ -132,7 +75,7 @@ export default {
       else this.$emit('close', false)
     },
     handelSubmitAnswer() {
-      this.$store.dispatch('exam/exam/submitExam')
+      this.$store.dispatch('exam/submitExam')
     },
   }
 }

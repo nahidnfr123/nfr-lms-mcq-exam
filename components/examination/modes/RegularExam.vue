@@ -14,7 +14,7 @@ export default {
   components: {MCQQuestion},
   computed: {
     mcqs() {
-      return this.$store.state.exam.exam.examQuestions
+      return this.$store.state.exam.examQuestions
     }
   }
 }

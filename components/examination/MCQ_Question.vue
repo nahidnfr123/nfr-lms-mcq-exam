@@ -109,22 +109,22 @@ export default {
       else return 0 // Wrong Answer
     },
     resultIsAvailable() {
-      return this.$store.state.exam.exam.isResultAvailable
+      return this.$store.state.exam.isResultAvailable
     },
     examConfig() {
-      return this.$store.state.exam.exam.examConfig
+      return this.$store.state.exam.examConfig
     },
     attended() {
-      return this.$store.state.exam.exam.attended
+      return this.$store.state.exam.attended
     },
     timeOver() {
-      return this.$store.state.exam.exam.timeOver
+      return this.$store.state.exam.timeOver
     },
   },
   watch: {
     choice() {
       // this.$emit('input', this.choice)
-      this.$store.commit('exam/exam/mcqClicked', {id: this.mcq.id, choice: this.choice})
+      this.$store.commit('exam/mcqClicked', {id: this.mcq.id, choice: this.choice})
     }
   },
   methods: {

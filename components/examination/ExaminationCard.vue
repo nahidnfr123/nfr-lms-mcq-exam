@@ -101,7 +101,7 @@
                     </strong>
                   </div>
                   <template v-if="!result || !result.submitted && examConfig.mode !== 'practice'">
-                    <v-btn class="white--text mb-1" color="#FF4040" @click="submitConfirmation()">Submit Answers</v-btn>
+                    <v-btn class="white--text mb-1 ml-1" color="#FF4040" @click="submitConfirmation()">Submit Answers</v-btn>
                   </template>
                 </div>
               </div>
@@ -109,34 +109,29 @@
           </v-card>
           <v-card elevation="20" class="pa-2 examQuestionCard">
             <div v-if="examStarted" class="my-4">
-              <div v-if="loader.isLoading" class="text-center">
-                <v-progress-circular :width="2" color="cyan" indeterminate size="60"/>
-              </div>
-              <template v-else>
-                <v-row v-if="examConfig.mode !== 'group'" dense>
-                  <v-col v-if="examQuestions && examQuestions.length" cols="12" class="examQuestions">
-                    <!-- Regular Exam -->
-                    <RegularExamination/>
-                  </v-col>
-                  <v-col v-else cols="12">
-                    <v-alert dense outlined type="error">No MCQs available in Exam!</v-alert>
-                  </v-col>
-                </v-row>
-                <v-row v-else dense>
-                  <v-col v-if="selectedSubjects && selectedSubjects.length" cols="12">
-                    <!--                        <group-exam-container
-                                              :submit-answers="submitAnswers"
-                                              :exam-config="examConfig"
-                                              :selected-subjects="selectedSubjects"
-                                              :results="result"
-                                              @result="result = $event"
-                                            ></group-exam-container>-->
-                  </v-col>
-                  <v-col v-else cols="12">
-                    <v-alert dense outlined type="error">No MCQs available in Exam!</v-alert>
-                  </v-col>
-                </v-row>
-              </template>
+              <v-row v-if="examConfig.mode !== 'group'" dense>
+                <v-col v-if="examQuestions && examQuestions.length" cols="12" class="examQuestions">
+                  <!-- Regular Exam -->
+                  <RegularExamination/>
+                </v-col>
+                <v-col v-else cols="12">
+                  <v-alert dense outlined type="error">No MCQs available in Exam!</v-alert>
+                </v-col>
+              </v-row>
+              <v-row v-else dense>
+                <v-col v-if="selectedSubjects && selectedSubjects.length" cols="12">
+                  <!--                        <group-exam-container
+                                            :submit-answers="submitAnswers"
+                                            :exam-config="examConfig"
+                                            :selected-subjects="selectedSubjects"
+                                            :results="result"
+                                            @result="result = $event"
+                                          ></group-exam-container>-->
+                </v-col>
+                <v-col v-else cols="12">
+                  <v-alert dense outlined type="error">No MCQs available in Exam!</v-alert>
+                </v-col>
+              </v-row>
             </div>
           </v-card>
         </v-col>
@@ -157,49 +152,45 @@ export default {
     rankingUrl: {type: String, required: true}
   },
   async fetch() {
-    this.$store.commit('exam/exam/clearExam')
-    await this.init()
+    // await this.init()
   },
   data() {
     return {
       selectedSubjects: [],
       examStarted: true,
-      loader: {
-        isLoading: false
-      },
       userAnswers: [],
     }
   },
   computed: {
     selectedMcqs() {
-      return this.$store.getters['exam/exam/selectedMcqs']
+      return this.$store.getters['exam/selectedMcqs']
     },
     content() {
-      return this.$store.state.exam.exam.content
+      return this.$store.state.exam.content
     },
     exam() {
-      return this.$store.state.exam.exam.exam
+      return this.$store.state.exam.exam
     },
     timeOver() {
-      return this.$store.state.exam.exam.timeOver
+      return this.$store.state.exam.timeOver
     },
     examQuestions() {
-      return this.$store.state.exam.exam.examQuestions
+      return this.$store.state.exam.examQuestions
     },
     result() {
-      return this.$store.state.exam.exam.result
+      return this.$store.state.exam.result
     },
     examConfig() {
-      return this.$store.state.exam.exam.examConfig
+      return this.$store.state.exam.examConfig
     },
     attended() {
-      return this.$store.state.exam.exam.attended
+      return this.$store.state.exam.attended
     },
     submitted() {
-      return this.$store.state.exam.exam.submitted
+      return this.$store.state.exam.submitted
     },
     isResultAvailable() {
-      return this.$store.state.exam.exam.isResultAvailable
+      return this.$store.state.exam.isResultAvailable
     },
     resultDuration() {
       if (this.isResultAvailable) {
@@ -216,9 +207,13 @@ export default {
   },
   methods: {
     async init() {
-      const response = await this.$getData('contents/' + this.contentId)
-
-      if (response.message === 'success') await this.$store.dispatch('exam/exam/initExam', response.data)
+      // this.$store.commit('exam/clearExam')
+      await this.$axios.get('contents/' + this.contentId)
+        .then((response) => {
+          if (response.data.data && Object.keys(response.data.data).length) {
+            this.$store.dispatch('exam/initExam', response.data.data)
+          }
+        })
     },
     submitConfirmation() {
       this.$swal?.fire({
@@ -234,7 +229,7 @@ export default {
       })
     },
     handelSubmitAnswer() {
-      this.$store.dispatch('exam/exam/submitExam')
+      this.$store.dispatch('exam/submitExam')
     },
     practiceMark() { /// Working But ... Dummy Code ..
       let correct = 0

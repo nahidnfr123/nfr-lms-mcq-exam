@@ -58,6 +58,9 @@ export default {
         result_publish_time: null
       }
     },
+    setContent(state, payload){
+      state.content = payload || null
+    },
     setExam(state, payload) {
       state.content = payload || null
       state.exam = payload?.exam || null
