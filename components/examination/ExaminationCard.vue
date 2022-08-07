@@ -316,7 +316,7 @@ export default {
   }
 }
 
-.count-down {
+/*.count-down {
   position: absolute;
   background-color: rgba(20, 20, 20, .98);
   pointer-events: none;
@@ -391,6 +391,7 @@ export default {
   }
 }
 
+*/
 .bar {
   position: relative;
   height: 4px;

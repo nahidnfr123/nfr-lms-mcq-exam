@@ -175,14 +175,9 @@ export default {
   }
 }
 </script>
+
 <style>
 .green {
   background-color: #E52520;
-}
-
-.profileImage {
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center center;
 }
 </style>
