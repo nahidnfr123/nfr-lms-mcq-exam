@@ -6,14 +6,15 @@
       </v-card>
 
       <!-- Exam Start Button -->
-      <template v-if="!result.submitted">
+      <template v-if="!result || !result.submitted">
         <v-btn
           class="mb-1 white--text px-4"
           color="red"
           :is-loading="isLoading"
           :disabled="!checkExamAvailability"
           @click.native="examWarning=true"
-        >Start Exam
+        >
+          <span>Start Exam</span>
           <span class="ml-1">{{ timer.text }}</span>
         </v-btn>
         <exam-warning
@@ -24,9 +25,7 @@
       </template>
       <template v-else>
         <!-- See Answers -->
-        <v-btn color="primary" @click="examStartButtonClicked()">
-          See Answers
-        </v-btn>
+        <v-btn color="primary" @click="examStartButtonClicked()">See Answers</v-btn>
         <!-- See Ranking -->
         <v-btn color="success" v-if="isResultAvailable" :to="$store.state.examUrls.frontendUrls.ranking">
           See Ranking
