@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      authUser: {},
       content: {},
       exam: {},
       examQuestions: null,
@@ -37,6 +38,9 @@ export default {
     }
   },
   mutations: {
+    setAuthUser(state, payload) {
+      state.authUser = payload
+    },
     clearExam(state) {
       state.content = {}
       state.exam = {}

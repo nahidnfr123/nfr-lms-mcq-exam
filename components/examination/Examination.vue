@@ -60,6 +60,7 @@ export default {
     contentId: {type: [Number, String], required: true},
     frontendUrls: {type: Object, required: true},
     backendUrls: {type: Object, required: true},
+    authUser: {type: Object, required: true},
   },
   data() {
     return {
@@ -74,6 +75,7 @@ export default {
   },
   async fetch() {
     await this.$store.commit('exam/clearExam')
+    this.$store.commit('exam/setAuthUser', this.authUser)
     this.$store.commit('examUrls/setFrontendUrls', this.frontendUrls)
     this.$store.commit('examUrls/setBackendUrls', this.backendUrls)
     await this.init()

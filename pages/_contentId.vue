@@ -4,6 +4,7 @@
       :contentId="$route.params.contentId"
       :frontendUrls="frontendUrls"
       :backendUrls="backendUrls"
+      :authUser="{id: 3, name: 'nahid'}"
     />
   </v-container>
 </template>

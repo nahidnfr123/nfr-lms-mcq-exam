@@ -10,21 +10,21 @@
             <v-col cols="4" justify="center" class="d-flex flex-column justify-start">
               <ranking-card v-if="itemsWithPosition[2]" :item="items[2]" color="#006D89" class="mt-8">
                 <template slot="image">
-                  <img src="~/assets/images/examination/3rd.png" alt="" height="100" style="position: absolute; top: -15%; right: 0">
+                  <img src="./images/3rd.png" alt="" height="100" style="position: absolute; top: -15%; right: 0">
                 </template>
               </ranking-card>
             </v-col>
             <v-col cols="4" justify="center" class="d-flex flex-column justify-start">
               <ranking-card v-if="itemsWithPosition[0]" :item="items[0]" color="#8E181D">
                 <template slot="image">
-                  <img src="~/assets/images/examination/1st.png" alt="" height="100" style="position: absolute; top: -15%; right: 0">
+                  <img src="./images/1st.png" alt="" height="100" style="position: absolute; top: -15%; right: 0">
                 </template>
               </ranking-card>
             </v-col>
             <v-col cols="4" justify="center" class="d-flex flex-column justify-start">
               <ranking-card v-if="itemsWithPosition[1]" :item="items[1]" color="#009563" class="mt-4">
                 <template slot="image">
-                  <img src="~/assets/images/examination/2nd.png" alt="" height="100" style="position: absolute; top: -20%; right: 0">
+                  <img src="./images/2nd.png" alt="" height="100" style="position: absolute; top: -20%; right: 0">
                 </template>
               </ranking-card>
             </v-col>
@@ -134,6 +134,9 @@ export default {
     }
   },
   computed: {
+    $auth() {
+      return this.$store.state.exam.authUser
+    },
     itemsWithPosition() {
       return this.items.map((d, index) => (
         {
@@ -160,14 +163,11 @@ export default {
       this.isLoading = true
       const perPage = this.itemsPagination?.options?.itemsPerPage ? this.itemsPagination?.options?.itemsPerPage : 20
       const pageNo = this.itemsPagination?.options?.page ? this.itemsPagination?.options?.page : 1
-      const response = await this.$getData(this.pageInfo.apiUrl + '?per_page=' + perPage + '&page=' + pageNo)
-
-      // const response = await this.$getData(this.pageInfo.apiUrl)
-      // this.items = response.message === 'success' ? response.data : {}
-
-      this.items = response.message === 'success' ? response.data : []
-      this.itemsPagination.totalItems = response?.meta?.total ? response.meta.total : 0
-      this.isLoading = false
+      await this.$axios.$get(this.pageInfo.apiUrl + '?per_page=' + perPage + '&page=' + pageNo)
+        .then((response) => {
+          this.items = response.data || []
+          this.itemsPagination.totalItems = response?.meta?.total ? response.meta.total : 0
+        }).finally(() => this.isLoading = false)
     },
     itemRowBackground(item) {
       return item.user?.id === this.$auth.user?.id ? 'red' : ''
